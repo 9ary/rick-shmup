@@ -1,4 +1,4 @@
-.PHONY: all run clean format include .FORCE
+.PHONY: all run clean format cflags .FORCE
 
 all: $(EXE)
 
@@ -34,7 +34,7 @@ format:
 	@clang-format -i -style=file $(shell git ls-files -c -o --exclude-standard *.c *.h)
 
 # YouCompleteMe configuration
-include:
-	@echo -n $(addprefix -I ,$(INCLUDE) $(INCLUDE_EXT))
+cflags:
+	@echo -n $(CFLAGS)
 
 .FORCE:
