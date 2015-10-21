@@ -33,6 +33,7 @@ void render_loop()
                                    sfResize | sfClose | sfFullscreen, NULL);
     if (!window)
         exit(EXIT_FAILURE);
+    sfRenderWindow_setFramerateLimit(window, 60);
 
     buffer = sfRenderTexture_create(BUFFER_W, BUFFER_H, sfFalse);
     if (!buffer)
