@@ -53,26 +53,28 @@ void render_loop()
         // Process events
         while (sfRenderWindow_pollEvent(window, &event))
         {
-            if (event.type == sfEvtClosed)
+            switch (event.type)
             {
-                sfRenderWindow_close(window);
-                continue;
-            }
+                case sfEvtClosed:
+                    sfRenderWindow_close(window);
+                    continue;
 
-            if (event.type == sfEvtResized)
-            {
-                size = sfRenderWindow_getSize(window);
-                sfFloatRect rect = {0, 0, size.x, size.y};
-                sfView *view = sfView_createFromRect(rect);
-                if (view)
-                {
-                    sfRenderWindow_setView(window, view);
-                    sfView_destroy(view);
-                }
+                case sfEvtResized:
+                    size = sfRenderWindow_getSize(window);
+                    sfFloatRect rect = {0, 0, size.x, size.y};
+                    sfView *view = sfView_createFromRect(rect);
+                    if (view)
+                    {
+                        sfRenderWindow_setView(window, view);
+                        sfView_destroy(view);
+                    }
 
-                sfSprite_setScale(buffer_sprite, buffer_scale(size));
-                sfSprite_setPosition(buffer_sprite, buffer_center(size));
-                continue;
+                    sfSprite_setScale(buffer_sprite, buffer_scale(size));
+                    sfSprite_setPosition(buffer_sprite, buffer_center(size));
+                    continue;
+
+                default:
+                    continue;
             }
         }
 
