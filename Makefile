@@ -19,6 +19,7 @@ endif
 CFLAGS = $(CFLAGS_COMMON) -std=gnu11
 
 LDFLAGS = $(CFLAGS_COMMON) \
+	  -lcsfml-system \
 	  -lcsfml-window \
 	  -lcsfml-graphics
 

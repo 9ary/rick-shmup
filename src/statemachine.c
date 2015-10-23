@@ -6,7 +6,8 @@
 typedef enum
 {
     cmd_push,
-    cmd_pop
+    cmd_pop,
+    cmd_stop
 } cmd_id_t;
 
 typedef struct
@@ -52,28 +53,40 @@ void sm_pop()
     sm_cmd_push(cmd_pop, NULL);
 }
 
+void sm_stop()
+{
+    sm_cmd_push(cmd_stop, NULL);
+}
+
 void sm_loop()
 {
     int cur_state = sm_stack->length - 1;
     cmd_t *cmd;
-    while ((cmd = pipe_pop(sm_cmds)))
+
+    while (1)
     {
-        switch (cmd->id)
+        while ((cmd = pipe_pop(sm_cmds)))
         {
-            case cmd_push:
-                list_add(sm_stack, cmd->args);
-                cur_state++;
-                continue;
+            switch (cmd->id)
+            {
+                case cmd_push:
+                    list_add(sm_stack, cmd->args);
+                    cur_state++;
+                    continue;
 
-            case cmd_pop:
-                ((state_t *) sm_stack->items[cur_state])->teardown();
-                list_pop(sm_stack);
-                cur_state--;
-                continue;
+                case cmd_pop:
+                    ((state_t *) sm_stack->items[cur_state])->teardown();
+                    list_pop(sm_stack);
+                    cur_state--;
+                    continue;
+
+                case cmd_stop:
+                    return;
+            }
         }
-    }
 
-    ((state_t *) sm_stack->items[cur_state])->update();
+        ((state_t *) sm_stack->items[cur_state])->update();
+    }
 }
 
 void sm_render()

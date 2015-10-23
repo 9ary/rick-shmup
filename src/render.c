@@ -2,7 +2,10 @@
 #include <SFML/Window.h>
 #include <SFML/Graphics.h>
 #include "render.h"
+#include "statemachine.h"
 #include "misc.h"
+
+sfRenderTexture *render_buffer;
 
 static sfVector2f buffer_scale(sfVector2u size)
 {
@@ -23,7 +26,6 @@ void render_loop()
 {
     sfVideoMode mode = sfVideoMode_getDesktopMode();
     sfRenderWindow *window;
-    sfRenderTexture *buffer;
     sfSprite *buffer_sprite;
 
     sfEvent event;
@@ -35,14 +37,14 @@ void render_loop()
         exit(EXIT_FAILURE);
     sfRenderWindow_setFramerateLimit(window, 60);
 
-    buffer = sfRenderTexture_create(BUFFER_W, BUFFER_H, sfFalse);
-    if (!buffer)
+    render_buffer = sfRenderTexture_create(BUFFER_W, BUFFER_H, sfFalse);
+    if (!render_buffer)
         exit(EXIT_FAILURE);
 
     buffer_sprite = sfSprite_create();
     if (!buffer_sprite)
         exit(EXIT_FAILURE);
-    sfSprite_setTexture(buffer_sprite, sfRenderTexture_getTexture(buffer),
+    sfSprite_setTexture(buffer_sprite, sfRenderTexture_getTexture(render_buffer),
                         sfTrue);
     size = sfRenderWindow_getSize(window);
     sfSprite_setScale(buffer_sprite, buffer_scale(size));
@@ -79,16 +81,16 @@ void render_loop()
         }
 
         sfRenderWindow_clear(window, sfBlack);
-        sfRenderTexture_clear(buffer, sfBlack);
+        sfRenderTexture_clear(render_buffer, sfBlack);
 
-        // TODO Call the current state's renderer
+        sm_render();
 
-        sfRenderTexture_display(buffer);
+        sfRenderTexture_display(render_buffer);
         sfRenderWindow_drawSprite(window, buffer_sprite, NULL);
         sfRenderWindow_display(window);
     }
 
     sfSprite_destroy(buffer_sprite);
-    sfRenderTexture_destroy(buffer);
+    sfRenderTexture_destroy(render_buffer);
     sfRenderWindow_destroy(window);
 }

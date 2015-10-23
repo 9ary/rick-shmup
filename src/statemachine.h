@@ -13,6 +13,7 @@ void sm_init();
 void sm_cleanup();
 void sm_push(state_t *state);
 void sm_pop();
+void sm_stop();
 void sm_loop();
 void sm_render();
 
