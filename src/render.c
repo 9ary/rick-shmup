@@ -44,8 +44,8 @@ void render_loop()
     buffer_sprite = sfSprite_create();
     if (!buffer_sprite)
         exit(EXIT_FAILURE);
-    sfSprite_setTexture(buffer_sprite, sfRenderTexture_getTexture(render_buffer),
-                        sfTrue);
+    sfSprite_setTexture(buffer_sprite,
+                        sfRenderTexture_getTexture(render_buffer), sfTrue);
     size = sfRenderWindow_getSize(window);
     sfSprite_setScale(buffer_sprite, buffer_scale(size));
     sfSprite_setPosition(buffer_sprite, buffer_center(size));
