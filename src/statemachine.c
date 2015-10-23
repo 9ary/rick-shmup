@@ -72,15 +72,18 @@ void sm_loop()
                 case cmd_push:
                     list_add(sm_stack, cmd->args);
                     cur_state++;
+                    free(cmd);
                     continue;
 
                 case cmd_pop:
                     ((state_t *) sm_stack->items[cur_state])->teardown();
                     list_pop(sm_stack);
                     cur_state--;
+                    free(cmd);
                     continue;
 
                 case cmd_stop:
+                    free(cmd);
                     return;
             }
         }
