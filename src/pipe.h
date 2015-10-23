@@ -1,6 +1,8 @@
 #ifndef INCLUDE_PIPE_H
 #define INCLUDE_PIPE_H
 
+#include <SFML/System.h>
+
 struct pipe_item
 {
     void *data;
@@ -11,6 +13,7 @@ typedef struct pipe
 {
     struct pipe_item *first;
     struct pipe_item *last;
+    sfMutex *mutex;
 } pipe_t;
 
 pipe_t *pipe_create();
