@@ -1,3 +1,4 @@
+#include <SFML/System.h>
 #include <SFML/Graphics.h>
 #include "test.h"
 #include "render.h"
@@ -14,6 +15,8 @@ void test_init()
 
 static void test_update()
 {
+    sfTime time = {100 * 1000};
+    sfSleep(time);
 }
 
 static void test_render()
