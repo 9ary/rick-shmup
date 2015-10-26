@@ -69,7 +69,7 @@ void sm_loop()
         exit(EXIT_FAILURE);
     const sfTime time_dt = sfSeconds(0.01);
     sfTime time_acc = time_dt;
-    sfTime time_now, time_next;
+    sfTime time_now = sfTime_Zero, time_next;
 
     while (1)
     {
