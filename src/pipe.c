@@ -13,6 +13,8 @@ pipe_t *pipe_create()
 
 void pipe_free(pipe_t *pipe)
 {
+    // Clear out all elements before freeing the struct
+    // It will leak memory anyway as the pointers themselves are not freed
     while (pipe_pop(pipe))
         ;
     sfMutex_destroy(pipe->mutex);
@@ -30,6 +32,7 @@ void pipe_push(pipe_t *pipe, void *data)
     if (pipe->last)
         pipe->last->next = next;
     else
+        // If there's no last item then the queue is empty
         pipe->first = next;
     pipe->last = next;
 
@@ -47,6 +50,7 @@ void *pipe_pop(pipe_t *pipe)
         free(pipe->first);
         pipe->first = next;
         if (!next)
+            // If this was the last item, remember that
             pipe->last = NULL;
 
         sfMutex_unlock(pipe->mutex);

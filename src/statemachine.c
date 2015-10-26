@@ -4,6 +4,9 @@
 #include "list.h"
 #include "pipe.h"
 
+/*
+ * Internal commands
+ */
 typedef enum
 {
     cmd_push,
@@ -11,15 +14,28 @@ typedef enum
     cmd_stop
 } cmd_id_t;
 
+/*
+ * Command struct to store into the pipe
+ */
 typedef struct
 {
     cmd_id_t id;
     void *args;
 } cmd_t;
 
+/*
+ * The actual stack
+ */
 static list_t *sm_stack;
+
+/*
+ * Command pipe
+ */
 static pipe_t *sm_cmds;
 
+/*
+ * Command wrapper
+ */
 static void sm_cmd_push(cmd_id_t id, void *args)
 {
     cmd_t *cmd = malloc(sizeof(cmd_t));
@@ -61,24 +77,32 @@ void sm_stop()
 
 void sm_loop()
 {
+    // Current state is always the topmost element of the stack
     int cur_state = sm_stack->length - 1;
+
+    // Used to receive commands
     cmd_t *cmd;
 
     sfClock *clock = sfClock_create();
     if (!clock)
         exit(EXIT_FAILURE);
+    // Update tick duration
     const sfTime time_dt = sfSeconds(0.01);
+    // Time we've been left behind
     sfTime time_acc = time_dt;
     sfTime time_now = sfTime_Zero, time_next;
 
     while (1)
     {
+        // Calculate the time the last tick took
         time_next = sfClock_getElapsedTime(clock);
         time_acc.microseconds += time_next.microseconds - time_now.microseconds;
         time_now = time_next;
 
+        // Catch up when we're late
         while (time_acc.microseconds >= time_dt.microseconds)
         {
+            // Process commands
             while ((cmd = pipe_pop(sm_cmds)))
             {
                 switch (cmd->id)
@@ -103,11 +127,14 @@ void sm_loop()
                 }
             }
 
+            // Call the current state's update routine
             ((state_t *) sm_stack->items[cur_state])->update();
 
+            // Simulation has stepped, update the time accumulator
             time_acc.microseconds -= time_dt.microseconds;
         }
 
+        // Put the thread to sleep for the rest of the tick
         sfTime time_sleep = {time_dt.microseconds - time_acc.microseconds};
         sfSleep(time_sleep);
     }
@@ -115,6 +142,7 @@ void sm_loop()
 
 void sm_render()
 {
+    // Current state is always the topmost element of the stack
     int cur_state = sm_stack->length - 1;
 
     // Find the lowest opaque state

@@ -7,6 +7,9 @@
 
 sfRenderTexture *render_buffer;
 
+/*
+ * Returns the scaling factor given the window size
+ */
 static sfVector2f buffer_scale(sfVector2u size)
 {
     float scale = min(size.x / (float) BUFFER_W, size.y / (float) BUFFER_H);
@@ -14,6 +17,9 @@ static sfVector2f buffer_scale(sfVector2u size)
     return ret;
 }
 
+/*
+ * Returns the position of the position of the buffer on the window
+ */
 static sfVector2f buffer_center(sfVector2u size)
 {
     float scale = min(size.x / (float) BUFFER_W, size.y / (float) BUFFER_H);
@@ -31,6 +37,7 @@ void render_loop()
     sfEvent event;
     sfVector2u size;
 
+    // TODO make window settings configurable
     window = sfRenderWindow_create(mode, PROJ_NAME,
                                    sfResize | sfClose | sfFullscreen, NULL);
     if (!window)
@@ -62,6 +69,8 @@ void render_loop()
                     continue;
 
                 case sfEvtResized:
+                    // Adapt the window's surface and recalculate the buffer
+                    // scale on window resize
                     size = sfRenderWindow_getSize(window);
                     sfFloatRect rect = {0, 0, size.x, size.y};
                     sfView *view = sfView_createFromRect(rect);
@@ -83,8 +92,10 @@ void render_loop()
         sfRenderWindow_clear(window, sfBlack);
         sfRenderTexture_clear(render_buffer, sfBlack);
 
+        // Ask the state machine to call the state renderers
         sm_render();
 
+        // Then shove it onto the user's face
         sfRenderTexture_display(render_buffer);
         sfRenderWindow_drawSprite(window, buffer_sprite, NULL);
         sfRenderWindow_display(window);
