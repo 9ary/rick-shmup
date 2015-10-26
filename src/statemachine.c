@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <SFML/System.h>
 #include "statemachine.h"
 #include "list.h"
 #include "pipe.h"
@@ -63,32 +64,52 @@ void sm_loop()
     int cur_state = sm_stack->length - 1;
     cmd_t *cmd;
 
+    sfClock *clock = sfClock_create();
+    if (!clock)
+        exit(EXIT_FAILURE);
+    const sfTime time_dt = sfSeconds(0.01);
+    sfTime time_acc = time_dt;
+    sfTime time_now, time_next;
+
     while (1)
     {
-        while ((cmd = pipe_pop(sm_cmds)))
+        time_next = sfClock_getElapsedTime(clock);
+        time_acc.microseconds += time_next.microseconds - time_now.microseconds;
+        time_now = time_next;
+
+        while (time_acc.microseconds >= time_dt.microseconds)
         {
-            switch (cmd->id)
+            while ((cmd = pipe_pop(sm_cmds)))
             {
-                case cmd_push:
-                    list_add(sm_stack, cmd->args);
-                    cur_state++;
-                    free(cmd);
-                    continue;
+                switch (cmd->id)
+                {
+                    case cmd_push:
+                        list_add(sm_stack, cmd->args);
+                        cur_state++;
+                        free(cmd);
+                        continue;
 
-                case cmd_pop:
-                    ((state_t *) sm_stack->items[cur_state])->teardown();
-                    list_pop(sm_stack);
-                    cur_state--;
-                    free(cmd);
-                    continue;
+                    case cmd_pop:
+                        ((state_t *) sm_stack->items[cur_state])->teardown();
+                        list_pop(sm_stack);
+                        cur_state--;
+                        free(cmd);
+                        continue;
 
-                case cmd_stop:
-                    free(cmd);
-                    return;
+                    case cmd_stop:
+                        free(cmd);
+                        sfClock_destroy(clock);
+                        return;
+                }
             }
+
+            ((state_t *) sm_stack->items[cur_state])->update();
+
+            time_acc.microseconds -= time_dt.microseconds;
         }
 
-        ((state_t *) sm_stack->items[cur_state])->update();
+        sfTime time_sleep = {time_dt.microseconds - time_acc.microseconds};
+        sfSleep(time_sleep);
     }
 }
 
