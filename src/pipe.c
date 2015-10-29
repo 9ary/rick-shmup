@@ -13,12 +13,15 @@ pipe_t *pipe_create()
 
 void pipe_free(pipe_t *pipe)
 {
-    // Clear out all elements before freeing the struct
-    // It will leak memory anyway as the pointers themselves are not freed
-    while (pipe_pop(pipe))
-        ;
-    sfMutex_destroy(pipe->mutex);
-    free(pipe);
+    if (pipe)
+    {
+        // Clear out all elements before freeing the struct
+        // It will leak memory anyway as the pointers themselves are not freed
+        while (pipe_pop(pipe))
+            ;
+        sfMutex_destroy(pipe->mutex);
+        free(pipe);
+    }
 }
 
 void pipe_push(pipe_t *pipe, void *data)
