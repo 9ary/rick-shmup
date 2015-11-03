@@ -5,6 +5,11 @@
 #include "pipe.h"
 
 /*
+ * Shortcut to access the nth state
+ */
+#define STATE(n) ((state_t *) sm_stack->items[n])
+
+/*
  * Internal commands
  */
 typedef enum
@@ -53,7 +58,7 @@ void sm_init()
 void sm_cleanup()
 {
     for (int i = 0; i < sm_stack->length; i++)
-        ((state_t *) sm_stack->items[i])->teardown();
+        STATE(i)->teardown(STATE(i)->instance);
     list_free(sm_stack);
     sm_stack = NULL;
     pipe_free(sm_cmds);
@@ -113,7 +118,7 @@ void sm_loop()
                         continue;
 
                     case cmd_pop:
-                        ((state_t *) sm_stack->items[cur_state])->teardown();
+                        STATE(cur_state)->teardown(STATE(cur_state)->instance);
                         list_pop(sm_stack);
                         cur_state--;
                         free(cmd);
@@ -127,7 +132,7 @@ void sm_loop()
             }
 
             // Call the current state's update routine
-            ((state_t *) sm_stack->items[cur_state])->update();
+            STATE(cur_state)->update(STATE(cur_state)->instance);
 
             // Simulation has stepped, update the time accumulator
             time_acc.microseconds -= time_dt.microseconds;
@@ -145,13 +150,13 @@ void sm_render()
     int cur_state = sm_stack->length - 1;
 
     // Find the lowest opaque state
-    while (((state_t *) sm_stack->items[cur_state])->transparent)
+    while (STATE(cur_state)->transparent)
         cur_state--;
 
     // Render from bottom to top
     while (cur_state < sm_stack->length)
     {
-        ((state_t *) sm_stack->items[cur_state])->render();
+        STATE(cur_state)->render(STATE(cur_state)->instance);
         cur_state++;
     }
 }
