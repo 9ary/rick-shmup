@@ -84,8 +84,7 @@ void sm_loop()
     cmd_t *cmd;
 
     sfClock *clock = sfClock_create();
-    if (!clock)
-        exit(EXIT_FAILURE);
+
     // Update tick duration
     const sfTime time_dt = sfSeconds(0.01);
     // Time we've been left behind

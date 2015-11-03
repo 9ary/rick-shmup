@@ -40,17 +40,11 @@ void render_loop()
     // TODO make window settings configurable
     window = sfRenderWindow_create(mode, PROJ_NAME,
                                    sfResize | sfClose | sfFullscreen, NULL);
-    if (!window)
-        exit(EXIT_FAILURE);
     sfRenderWindow_setFramerateLimit(window, 60);
 
     render_buffer = sfRenderTexture_create(BUFFER_W, BUFFER_H, sfFalse);
-    if (!render_buffer)
-        exit(EXIT_FAILURE);
 
     buffer_sprite = sfSprite_create();
-    if (!buffer_sprite)
-        exit(EXIT_FAILURE);
     sfSprite_setTexture(buffer_sprite,
                         sfRenderTexture_getTexture(render_buffer), sfTrue);
     size = sfRenderWindow_getSize(window);
