@@ -131,6 +131,8 @@ void sm_loop()
                 }
             }
 
+            input_copy();
+
             // Call the current state's update routine
             STATE(cur_state)->update(STATE(cur_state)->instance);
 

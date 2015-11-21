@@ -1,6 +1,8 @@
+#include <stdio.h>
 #include <SFML/Graphics.h>
 #include "test.h"
 #include "render.h"
+#include "input.h"
 
 static sfTexture *dawn;
 static sfSprite *dawn_sprite;
@@ -14,6 +16,14 @@ void test_init()
 
 static void test_update()
 {
+    if (input_key_pressed(input_up))
+        printf("Up pressed\n");
+
+    if (input_key_held(input_up))
+        printf("Up held\n");
+
+    if (input_key_released(input_up))
+        printf("Up released\n");
 }
 
 static void test_render()

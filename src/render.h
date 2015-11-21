@@ -17,6 +17,7 @@
  * Main render surface, everything that draws should do it on there
  */
 extern sfRenderTexture *render_buffer;
+extern sfRenderWindow *window;
 
 void render_loop();
 

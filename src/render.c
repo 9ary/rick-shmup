@@ -3,9 +3,11 @@
 #include <SFML/Graphics.h>
 #include "render.h"
 #include "statemachine.h"
+#include "input.h"
 #include "misc.h"
 
 sfRenderTexture *render_buffer;
+sfRenderWindow *window;
 
 /*
  * Returns the scaling factor given the window size
@@ -31,7 +33,6 @@ static sfVector2f buffer_center(sfVector2u size)
 void render_loop()
 {
     sfVideoMode mode = sfVideoMode_getDesktopMode();
-    sfRenderWindow *window;
     sfSprite *buffer_sprite;
 
     sfEvent event;
@@ -82,6 +83,8 @@ void render_loop()
                     continue;
             }
         }
+
+        input_poll();
 
         sfRenderWindow_clear(window, sfBlack);
         sfRenderTexture_clear(render_buffer, sfBlack);
