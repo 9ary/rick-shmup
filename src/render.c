@@ -32,15 +32,14 @@ static sfVector2f buffer_center(sfVector2u size)
 
 void render_loop()
 {
-    sfVideoMode mode = sfVideoMode_getDesktopMode();
+    sfVideoMode mode = { 640, 480, 32 };
     sfSprite *buffer_sprite;
 
     sfEvent event;
     sfVector2u size;
 
     // TODO make window settings configurable
-    window = sfRenderWindow_create(mode, PROJ_NAME,
-                                   sfResize | sfClose | sfFullscreen, NULL);
+    window = sfRenderWindow_create(mode, PROJ_NAME, sfResize | sfClose, NULL);
     sfRenderWindow_setFramerateLimit(window, 60);
 
     render_buffer = sfRenderTexture_create(BUFFER_W, BUFFER_H, sfFalse);
