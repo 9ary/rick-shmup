@@ -39,7 +39,7 @@ void render_loop()
     sfVector2u size;
 
     // TODO make window settings configurable
-    window = sfRenderWindow_create(mode, PROJ_NAME, sfResize | sfClose, NULL);
+    window = sfRenderWindow_create(mode, PROJ_NAME, sfClose, NULL);
     sfRenderWindow_setFramerateLimit(window, 60);
 
     render_buffer = sfRenderTexture_create(BUFFER_W, BUFFER_H, sfFalse);
