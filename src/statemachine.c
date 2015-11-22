@@ -3,6 +3,7 @@
 #include "statemachine.h"
 #include "list.h"
 #include "pipe.h"
+#include "input.h"
 
 /*
  * Shortcut to access the nth state
