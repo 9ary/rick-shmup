@@ -20,7 +20,7 @@ static sfVector2f buffer_scale(sfVector2u size)
 }
 
 /*
- * Returns the position of the position of the buffer on the window
+ * Returns the position of the buffer on the window
  */
 static sfVector2f buffer_center(sfVector2u size)
 {
