@@ -1,4 +1,4 @@
-.PHONY: all run clean format cflags .FORCE
+.PHONY: all run clean cflags .FORCE
 
 all: $(EXE)
 
@@ -28,10 +28,6 @@ run: all
 clean:
 	@echo "  RM      $(OUT)"
 	@rm -rf $(OUT)
-
-format:
-	@echo "  CLANG-FORMAT"
-	@clang-format -i -style=file $(shell git ls-files -c -o --exclude-standard *.c *.h)
 
 # YouCompleteMe configuration
 cflags:
