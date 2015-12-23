@@ -7,7 +7,7 @@
 #include "misc.h"
 
 sfRenderTexture *render_buffer;
-sfRenderWindow *window;
+static sfRenderWindow *window;
 
 /*
  * Returns the scaling factor given the window size
@@ -30,6 +30,11 @@ static sfVector2f buffer_center(sfVector2u size)
     return ret;
 }
 
+int render_has_focus()
+{
+    return window && sfRenderWindow_hasFocus(window);
+}
+
 void render_loop()
 {
     sfVideoMode mode = { 640, 480, 32 };
@@ -45,8 +50,7 @@ void render_loop()
     render_buffer = sfRenderTexture_create(BUFFER_W, BUFFER_H, sfFalse);
 
     buffer_sprite = sfSprite_create();
-    sfSprite_setTexture(buffer_sprite,
-                        sfRenderTexture_getTexture(render_buffer), sfTrue);
+    sfSprite_setTexture(buffer_sprite, sfRenderTexture_getTexture(render_buffer), sfTrue);
     size = sfRenderWindow_getSize(window);
     sfSprite_setScale(buffer_sprite, buffer_scale(size));
     sfSprite_setPosition(buffer_sprite, buffer_center(size));

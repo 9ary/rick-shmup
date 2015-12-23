@@ -1,5 +1,4 @@
 #include <string.h>
-#include <SFML/Window.h>
 #include "input.h"
 #include "render.h"
 #include "misc.h"
@@ -46,9 +45,7 @@ void input_poll()
 {
     for (input_t i = 0; i < input_num; i++)
     {
-        if (map[i].key != sfKeyUnknown
-            // Keyboard input depends on focus and the window existing
-            && window && sfRenderWindow_hasFocus(window))
+        if (map[i].key != sfKeyUnknown && render_has_focus())
         {
             states_poll[i] = sfKeyboard_isKeyPressed(map[i].key);
             if (states_poll[i])
@@ -57,8 +54,7 @@ void input_poll()
 
         if (map[i].button >= 0)
         {
-            states_poll[i] =
-                sfJoystick_isButtonPressed(controller, map[i].button);
+            states_poll[i] = sfJoystick_isButtonPressed(controller, map[i].button);
             if (states_poll[i])
                 continue;
         }
@@ -66,9 +62,7 @@ void input_poll()
         if (map[i].axis >= 0)
         {
             states_poll[i] =
-                min(sfJoystick_getAxisPosition(controller, map[i].axis) *
-                        map[i].sign,
-                    0);
+                min(sfJoystick_getAxisPosition(controller, map[i].axis) * map[i].sign, 0);
             if (states_poll[i])
                 continue;
         }
@@ -79,8 +73,8 @@ void input_poll()
 
 void input_copy()
 {
-    memcpy(states_previous, states_current, sizeof(float) * input_num);
-    memcpy(states_current, states_poll, sizeof(float) * input_num);
+    memcpy(states_previous, states_current, sizeof(states_current));
+    memcpy(states_current, states_poll, sizeof(states_poll));
 }
 
 int input_key_pressed(input_t key)

@@ -36,7 +36,10 @@ static void test_teardown()
     sfTexture_destroy(dawn);
 }
 
-state_t test_state = {.update = &test_update,
-                      .render = &test_render,
-                      .teardown = &test_teardown,
-                      .transparent = 0};
+state_t test_state =
+{
+    .update = &test_update,
+    .render = &test_render,
+    .teardown = &test_teardown,
+    .transparent = 0
+};
