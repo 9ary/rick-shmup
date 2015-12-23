@@ -45,7 +45,7 @@ void input_poll()
 {
     for (input_t i = 0; i < input_num; i++)
     {
-        if (map[i].key != sfKeyUnknown && render_has_focus())
+        if (map[i].key != sfKeyUnknown && window_has_focus())
         {
             states_poll[i] = sfKeyboard_isKeyPressed(map[i].key);
             if (states_poll[i])

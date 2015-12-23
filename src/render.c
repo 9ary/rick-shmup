@@ -30,7 +30,7 @@ static sfVector2f buffer_center(sfVector2u size)
     return ret;
 }
 
-int render_has_focus()
+int window_has_focus()
 {
     return window && sfRenderWindow_hasFocus(window);
 }

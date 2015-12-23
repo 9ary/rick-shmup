@@ -18,7 +18,7 @@
  */
 extern sfRenderTexture *render_buffer;
 
-int render_has_focus();
+int window_has_focus();
 void render_loop();
 
 #endif
