@@ -19,9 +19,9 @@ endif
 CFLAGS = $(CFLAGS_COMMON) -std=gnu11
 
 LDFLAGS = $(CFLAGS_COMMON) \
-	  -lcsfml-system \
-	  -lcsfml-window \
-	  -lcsfml-graphics
+	-lcsfml-system \
+	-lcsfml-window \
+	-lcsfml-graphics
 
 SRCS_C :=
 OBJS = $(BUILT_SRCS_C:%.c=%.o) \
@@ -38,14 +38,7 @@ CLEAN_SPEC :=
 
 # Figure out where we are
 define whereami
-$(strip \
-	$(eval LOCAL_MODULE_MAKEFILE := $$(lastword $$(MAKEFILE_LIST))) \
-	$(if $(filter $(BUILD_SYSTEM)/% $(OUT_DIR)/%,$(LOCAL_MODULE_MAKEFILE)), \
-		$(error my-dir must be called before including any other makefile.) \
-	, \
-		$(patsubst %/,%,$(dir $(LOCAL_MODULE_MAKEFILE))) \
-	) \
-)
+$(strip $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST)))))
 endef
 
 include rules.mk
