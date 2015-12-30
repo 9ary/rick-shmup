@@ -39,6 +39,10 @@ static list_t *sm_stack;
  */
 static pipe_t *sm_cmds;
 
+static sfThread *sm_thread;
+
+static void sm_loop();
+
 /*
  * Command wrapper
  */
@@ -54,6 +58,9 @@ void sm_init()
 {
     sm_stack = list_create();
     sm_cmds = pipe_create();
+    sm_thread = sfThread_create(&sm_loop, NULL);
+    if (!sm_thread)
+        exit(EXIT_FAILURE);
 }
 
 void sm_cleanup()
@@ -64,6 +71,13 @@ void sm_cleanup()
     sm_stack = NULL;
     pipe_free(sm_cmds);
     sm_cmds = NULL;
+    sfThread_destroy(sm_thread);
+    sm_thread = NULL;
+}
+
+void sm_start()
+{
+    sfThread_launch(sm_thread);
 }
 
 void sm_push(state_t *state)
@@ -79,9 +93,10 @@ void sm_pop()
 void sm_stop()
 {
     sm_cmd_push(cmd_stop, NULL);
+    sfThread_wait(sm_thread);
 }
 
-void sm_loop()
+static void sm_loop()
 {
     // Current state is always the topmost element of the stack
     int cur_state = sm_stack->length - 1;

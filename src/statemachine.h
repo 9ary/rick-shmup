@@ -43,6 +43,11 @@ void sm_init();
 void sm_cleanup();
 
 /*
+ * Start the state machine thread
+ */
+void sm_start();
+
+/*
  * Push a new state onto the stack
  */
 void sm_push(state_t *state);
@@ -56,11 +61,6 @@ void sm_pop();
  * Interrupt the machine
  */
 void sm_stop();
-
-/*
- * Main loop, run this as a thread
- */
-void sm_loop();
 
 /*
  * Calls the renderers from the stack following transparency

@@ -3,8 +3,6 @@
 
 #include "statemachine.h"
 
-extern state_t test_state;
-
-void test_init();
+state_t *test_init();
 
 #endif

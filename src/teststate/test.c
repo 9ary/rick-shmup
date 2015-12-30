@@ -6,12 +6,15 @@
 
 static sfTexture *dawn;
 static sfSprite *dawn_sprite;
+static state_t test_state;
 
-void test_init()
+state_t *test_init()
 {
     dawn = sfTexture_createFromFile("art/dawn.png", NULL);
     dawn_sprite = sfSprite_create();
     sfSprite_setTexture(dawn_sprite, dawn, sfTrue);
+
+    return &test_state;
 }
 
 static void test_update()
@@ -36,7 +39,7 @@ static void test_teardown()
     sfTexture_destroy(dawn);
 }
 
-state_t test_state =
+static state_t test_state =
 {
     .update = &test_update,
     .render = &test_render,
