@@ -157,7 +157,7 @@ static void sm_loop()
         }
 
         // Put the thread to sleep for the rest of the tick
-        sfTime time_sleep = {time_dt.microseconds - time_acc.microseconds};
+        sfTime time_sleep = { time_dt.microseconds - time_acc.microseconds };
         sfSleep(time_sleep);
     }
 }

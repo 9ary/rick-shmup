@@ -15,7 +15,7 @@ static sfRenderWindow *window = NULL;
 static sfVector2f buffer_scale(sfVector2u size)
 {
     float scale = min(size.x / (float) BUFFER_W, size.y / (float) BUFFER_H);
-    sfVector2f ret = {scale, scale};
+    sfVector2f ret = { scale, scale };
     return ret;
 }
 
@@ -25,8 +25,11 @@ static sfVector2f buffer_scale(sfVector2u size)
 static sfVector2f buffer_center(sfVector2u size)
 {
     float scale = min(size.x / (float) BUFFER_W, size.y / (float) BUFFER_H);
-    sfVector2f ret = {(size.x - BUFFER_W * scale) / 2,
-                      (size.y - BUFFER_H * scale) / 2};
+    sfVector2f ret =
+    {
+        (size.x - BUFFER_W * scale) / 2,
+        (size.y - BUFFER_H * scale) / 2
+    };
     return ret;
 }
 
@@ -70,7 +73,7 @@ void render_loop()
                     // Adapt the window's surface and recalculate the buffer
                     // scale on window resize
                     size = sfRenderWindow_getSize(window);
-                    sfFloatRect rect = {0, 0, size.x, size.y};
+                    sfFloatRect rect = { 0, 0, size.x, size.y };
                     sfView *view = sfView_createFromRect(rect);
                     if (view)
                     {
