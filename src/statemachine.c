@@ -32,14 +32,14 @@ typedef struct
 /*
  * The actual stack
  */
-static list_t *sm_stack;
+static list_t *sm_stack = NULL;
 
 /*
  * Command pipe
  */
-static pipe_t *sm_cmds;
+static pipe_t *sm_cmds = NULL;
 
-static sfThread *sm_thread;
+static sfThread *sm_thread = NULL;
 
 static void sm_loop();
 

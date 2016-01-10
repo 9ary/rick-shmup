@@ -6,8 +6,8 @@
 #include "input.h"
 #include "misc.h"
 
-sfRenderTexture *render_buffer;
-static sfRenderWindow *window;
+sfRenderTexture *render_buffer = NULL;
+static sfRenderWindow *window = NULL;
 
 /*
  * Returns the scaling factor given the window size
@@ -38,7 +38,7 @@ int window_has_focus()
 void render_loop()
 {
     sfVideoMode mode = { 640, 480, 32 };
-    sfSprite *buffer_sprite;
+    sfSprite *buffer_sprite = NULL;
 
     sfEvent event;
     sfVector2u size;
